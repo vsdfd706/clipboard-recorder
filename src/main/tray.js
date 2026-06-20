@@ -1,7 +1,6 @@
 const { Tray, Menu, nativeImage } = require('electron');
-const path = require('path');
 
-function createTray({ monitor, getWin }) {
+function createTray({ monitor, getWin, getIconPath }) {
   // Create a simple 16x16 tray icon programmatically (no external file needed)
   const icon = nativeImage.createEmpty();
   const tray = new Tray(icon);  // We'll use a simple colored icon
