@@ -86,8 +86,8 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
     settings[key] = value;
     // Persist settings to disk
     // _dataDir is set by main/index.js during settings initialization
-    // Note: settings persistence lives here since settings lives in main process scope.
-    // The saveSettings() in index.js is used for initial file creation only.
+    // 注意：settings 持久化在此处处理，因为 settings 存在于主进程作用域。
+    // index.js 中的 saveSettings() 仅用于初始文件创建。
     const settingsPath = path.join(settings._dataDir, 'settings.json');
     const toSave = { ...settings };
     delete toSave._dataDir;

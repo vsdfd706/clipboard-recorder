@@ -60,7 +60,7 @@ function createWindow() {
 
   win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
 
-  // Minimize to tray instead of closing
+  // 关闭窗口时最小化到托盘
   win.on('close', (event) => {
     if (!app.isQuitting && settings.minimizeToTray) {
       event.preventDefault();
@@ -76,7 +76,7 @@ app.whenReady().then(() => {
 
   // Load settings
   settings = loadSettings();
-  saveSettings(); // Ensure file exists
+  saveSettings(); // 确保文件存在
 
   // Init clipboard monitor
   monitor = new ClipboardMonitor(db, imagesDir, filesDir, (record) => {
