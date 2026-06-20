@@ -22,6 +22,7 @@ function loadSettings() {
     monitoringEnabled: true,
     notifyNewRecord: false,
     maxRecords: 0,
+    theme: 'light',
     customDataDir: '',
     _dataDir: DATA_DIR,
   };

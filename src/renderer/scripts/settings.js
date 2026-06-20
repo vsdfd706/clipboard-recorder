@@ -9,6 +9,27 @@ const SETTING_IDS = {
 };
 
 export function initSettings() {
+  // Theme toggle
+  const btnLight = document.getElementById('theme-light');
+  const btnDark = document.getElementById('theme-dark');
+
+  function setThemeUI(theme) {
+    const isLight = theme === 'light';
+    btnLight.classList.toggle('active', isLight);
+    btnDark.classList.toggle('active', !isLight);
+    document.documentElement.setAttribute('data-theme', isLight ? '' : 'dark');
+  }
+
+  btnLight.addEventListener('click', async () => {
+    setThemeUI('light');
+    await window.clipboardAPI.setSetting('theme', 'light');
+  });
+
+  btnDark.addEventListener('click', async () => {
+    setThemeUI('dark');
+    await window.clipboardAPI.setSetting('theme', 'dark');
+  });
+
   // Bind change handlers for each setting
   const bind = (key, id) => {
     const el = document.getElementById(id);
@@ -42,4 +63,10 @@ export async function loadSettings() {
   document.getElementById('setting-monitor-enabled').checked = settings.monitoringEnabled !== false;
   document.getElementById('setting-notify').checked = settings.notifyNewRecord || false;
   document.getElementById('setting-max-records').value = settings.maxRecords || 0;
+
+  // Apply theme
+  const theme = settings.theme || 'light';
+  document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
+  document.getElementById('theme-light').classList.toggle('active', theme === 'light');
+  document.getElementById('theme-dark').classList.toggle('active', theme === 'dark');
 }
