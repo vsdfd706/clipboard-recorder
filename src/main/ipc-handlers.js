@@ -113,6 +113,12 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
     return monitor.isRunning();
   });
 
+  // ── Stats ──
+
+  ipcMain.handle('stats:get', () => {
+    return dbModule.getStats(db);
+  });
+
   // ── Window control ──
 
   ipcMain.handle('window:hide', () => {
