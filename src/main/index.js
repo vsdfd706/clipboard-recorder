@@ -32,7 +32,7 @@ function loadSettings() {
       return { ...defaults, ...data, _dataDir: DATA_DIR };
     }
   } catch (e) {
-    // Use defaults on parse failure
+    // 解析失败则使用默认值
   }
   return defaults;
 }

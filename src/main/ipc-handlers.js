@@ -30,7 +30,7 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
 
   ipcMain.handle('records:copy-to-clipboard', (_event, id) => {
     const record = dbModule.getRecordById(db, id);
-    if (!record) return { ok: false, error: 'Not found' };
+    if (!record) return { ok: false, error: '记录未找到' };
 
     if (record.type === 'text') {
       clipboard.writeText(record.content);
@@ -38,7 +38,7 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
       const img = nativeImage.createFromPath(record.file_path);
       clipboard.writeImage(img);
     } else if (record.type === 'file') {
-      return { ok: false, error: 'File type not yet supported for clipboard copy' };
+      return { ok: false, error: '文件类型暂不支持复制到剪贴板' };
     }
     return { ok: true };
   });

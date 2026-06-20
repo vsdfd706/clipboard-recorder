@@ -142,7 +142,7 @@ function softDelete(db, id) {
 
 function moveToTrash(db, id) {
   const record = getRecordById(db, id);
-  if (!record) throw new Error(`Record not found: ${id}`);
+  if (!record) throw new Error(`未找到记录: ${id}`);
 
   const trashId = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -166,11 +166,11 @@ function getTrashRecords(db) {
 
 function restoreFromTrash(db, trashId) {
   const trashRecord = db.prepare('SELECT * FROM trash WHERE id = ?').get(trashId);
-  if (!trashRecord) throw new Error(`Trash record not found: ${trashId}`);
+  if (!trashRecord) throw new Error(`回收站中未找到记录: ${trashId}`);
 
   const now = new Date().toISOString();
 
-  // Restore the original record by replacing the soft-deleted entry
+  // 恢复原记录，替换软删除的条目
   db.prepare(`
     INSERT OR REPLACE INTO records (id, type, content, file_path, file_name, source_app, note, created_at, updated_at, is_deleted)
     VALUES (@id, @type, @content, @filePath, @fileName, @sourceApp, @note, @originalCreatedAt, @now, 0)
@@ -186,7 +186,7 @@ function restoreFromTrash(db, trashId) {
 
 function permanentDelete(db, trashId) {
   const trashRecord = db.prepare('SELECT * FROM trash WHERE id = ?').get(trashId);
-  if (!trashRecord) throw new Error(`Trash record not found: ${trashId}`);
+  if (!trashRecord) throw new Error(`回收站中未找到记录: ${trashId}`);
 
   const deletedFiles = [];
   if (trashRecord.file_path && fs.existsSync(trashRecord.file_path)) {

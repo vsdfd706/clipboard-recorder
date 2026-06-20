@@ -6,11 +6,11 @@ const fs = require('fs');
 class ClipboardMonitor {
   /**
    * @param {object} db - better-sqlite3 database instance
-   * @param {string} imagesDir - directory to save clipboard images
-   * @param {string} filesDir - directory to save copied files
-   * @param {function} onNewRecord - callback invoked with record object for each new clipboard entry.
-   *   The callback should persist the record and notify the renderer.
-   *   Signature: (record) => void
+   * @param {string} imagesDir - 保存剪贴板图片的目录
+   * @param {string} filesDir - 保存复制文件的目录
+   * @param {function} onNewRecord - 监听到新内容时的回调，传入 record 对象。
+   *   回调应负责持久化记录并通知渲染进程。
+   *   签名: (record) => void
    */
   constructor(db, imagesDir, filesDir, onNewRecord) {
     this.db = db;
@@ -24,7 +24,7 @@ class ClipboardMonitor {
   }
 
   /**
-   * Start polling the clipboard.
+   * 开始轮询剪贴板。
    */
   start() {
     if (this._running) return;
@@ -33,7 +33,7 @@ class ClipboardMonitor {
   }
 
   /**
-   * Stop polling the clipboard.
+   * 停止轮询剪贴板。
    */
   stop() {
     this._running = false;
@@ -44,14 +44,14 @@ class ClipboardMonitor {
   }
 
   /**
-   * Check whether the monitor is currently running.
+   * 查询监控是否正在运行。
    * @returns {boolean}
    */
   isRunning() {
     return this._running;
   }
 
-  // ---- internal ----
+  // ---- 内部方法 ----
 
   _poll() {
     if (!this._running) return;
@@ -59,8 +59,7 @@ class ClipboardMonitor {
     try {
       this._checkClipboard();
     } catch (err) {
-      // Clipboard reads can fail transiently (e.g. no X selection on Linux,
-      // or the clipboard is locked by another process). Silently retry.
+      // 剪贴板读取可能瞬时失败（如 Linux 无 X selection，或被其他进程锁定），静默重试
     }
 
     this._timer = setTimeout(() => this._poll(), this._interval);
@@ -92,15 +91,15 @@ class ClipboardMonitor {
       }
     }
 
-    // --- File(s) ---
-    // On Windows, file copies are exposed via the 'CF_HDROP' format.
-    // Note: Electron does not provide a file-list API on the clipboard object,
-    // so we detect the file path from the raw file list format and read the file.
-    // If the file list has changed (different path), treat it as new content.
+    // --- 文件 ---
+    // 在 Windows 上，文件复制通过 'CF_HDROP' 格式暴露。
+    // 注意：Electron 未在 clipboard 对象上提供文件列表 API，
+    // 所以我们从原始文件列表格式中检测文件路径并读取文件。
+    // 如果文件列表发生了改变（不同路径），则视为新内容。
     if (formats.includes('CF_HDROP')) {
       const fileList = clipboard.read('CF_HDROP');
       if (fileList && fileList.length > 0) {
-        // fileList is a raw string with null-separated file paths
+        // fileList 是一个以 null 分隔的原始文件路径字符串
         const files = fileList.replace(/\0+$/, '').split('\0');
         const hash = this._hash('files:' + files.join('\0'));
         if (hash !== this._lastHash) {
@@ -121,7 +120,7 @@ class ClipboardMonitor {
   }
 
   /**
-   * Compute an MD5 hex hash of the input string.
+   * 计算输入字符串的 MD5 哈希值。
    * @param {string} input
    * @returns {string}
    */
@@ -130,8 +129,8 @@ class ClipboardMonitor {
   }
 
   /**
-   * Build the record object, save images/files to disk,
-   * and invoke the onNewRecord callback.
+   * 构建记录对象，将图片/文件保存到磁盘，
+   * 并调用 onNewRecord 回调。
    */
   _emitRecord({ type, content, imageBuffer, filePath, fileName, files }) {
     const id = crypto.randomUUID();
@@ -151,7 +150,7 @@ class ClipboardMonitor {
     if (type === 'file' && filePath && fileName) {
       persistedFileName = fileName;
       persistedFilePath = filePath;
-      // For file records, store the joined file paths as content
+      // 文件记录：将文件路径拼接为 content
       content = files ? files.join('\n') : filePath;
     }
 

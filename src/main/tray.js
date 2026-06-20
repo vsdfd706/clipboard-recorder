@@ -1,7 +1,7 @@
 const { Tray, Menu, nativeImage } = require('electron');
 
 function createTray({ monitor, getWin, getIconPath }) {
-  // Create a simple 16x16 tray icon programmatically (no external file needed)
+  // 程序化生成 16x16 托盘图标（无需外部文件）
   const icon = nativeImage.createEmpty();
   const tray = new Tray(icon);  // We'll use a simple colored icon
 
