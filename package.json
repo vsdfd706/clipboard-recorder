@@ -6,14 +6,15 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "rebuild": "electron-rebuild"
+    "rebuild": "electron-rebuild",
+    "test": "electron src/main/run-tests.js --no-sandbox"
   },
   "dependencies": {
     "better-sqlite3": "^11.7.0"
   },
   "devDependencies": {
+    "@electron/rebuild": "^3.7.0",
     "electron": "^33.3.0",
-    "electron-builder": "^25.1.0",
-    "@electron/rebuild": "^3.7.0"
+    "electron-builder": "^25.1.0"
   }
 }
