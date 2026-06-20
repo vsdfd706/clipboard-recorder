@@ -138,10 +138,10 @@ function getPreview(record) {
     return (record.content || '').replace(/\n/g, ' ').substring(0, 80);
   }
   if (record.type === 'image') {
-    return `[Image] ${record.file_name || ''}`;
+    return `[图片] ${record.file_name || ''}`;
   }
   if (record.type === 'file') {
-    return `[File] ${record.file_name || ''}`;
+    return `[文件] ${record.file_name || ''}`;
   }
   return '';
 }

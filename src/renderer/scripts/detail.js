@@ -94,7 +94,7 @@ export async function showDetail(id) {
     document.getElementById('detail-note-editor').value = record.note || '';
   } else if (record.type === 'file') {
     fileInfo.style.display = 'block';
-    document.getElementById('detail-file-name').textContent = record.file_name || 'Unknown file';
+    document.getElementById('detail-file-name').textContent = record.file_name || '未知文件';
     noteGroup.style.display = 'block';
     document.getElementById('detail-note-editor').value = record.note || '';
   }

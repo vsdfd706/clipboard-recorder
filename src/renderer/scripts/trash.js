@@ -44,14 +44,14 @@ async function renderTrash() {
         <div class="trash-info">
           <div class="trash-preview">${escapeHtml(preview)}</div>
           <div class="trash-meta">
-            <span>Type: ${item.type}</span>
-            <span>Created: ${originalDate}</span>
-            <span>Deleted: ${deletedDate}</span>
+            <span>类型：${item.type}</span>
+            <span>创建于：${originalDate}</span>
+            <span>删除于：${deletedDate}</span>
           </div>
         </div>
         <div class="trash-actions">
-          <button class="btn btn-sm btn-restore" data-id="${item.id}">↩ Restore</button>
-          <button class="btn btn-sm btn-danger btn-delete-forever" data-id="${item.id}">✕ Delete Forever</button>
+          <button class="btn btn-sm btn-restore" data-id="${item.id}">↩ 恢复</button>
+          <button class="btn btn-sm btn-danger btn-delete-forever" data-id="${item.id}">✕ 永久删除</button>
         </div>
       </div>
     `;
