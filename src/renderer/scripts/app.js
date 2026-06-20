@@ -2,8 +2,8 @@
 import { initList, refreshList } from './list.js';
 import { initDetail } from './detail.js';
 import { initSearch } from './search.js';
-import { initTrash } from './trash.js';
-import { initSettings } from './settings.js';
+import { initTrash, initTrashView } from './trash.js';
+import { initSettings, loadSettings } from './settings.js';
 import { initKeys } from './keys.js';
 
 // ── Global State ──
@@ -31,23 +31,13 @@ function switchTab(tabName) {
   document.getElementById('left-panel').style.display = tabName === 'records' ? 'flex' : 'none';
 
   // Load data for tab
-  if (tabName === 'trash') loadTrashData();
-  if (tabName === 'settings') loadSettingsData();
+  if (tabName === 'trash') initTrashView();
+  if (tabName === 'settings') loadSettings();
 
   // Reset selection when switching away from records
   if (tabName !== 'records') {
     state.selectedRecordId = null;
   }
-}
-
-async function loadTrashData() {
-  const { initTrashView } = await import('./trash.js');
-  initTrashView();
-}
-
-async function loadSettingsData() {
-  const { loadSettings } = await import('./settings.js');
-  loadSettings();
 }
 
 // ── Stats Badge Updates ──
@@ -89,7 +79,7 @@ async function init() {
   });
 
   // Initial load
-  refreshStats();
+  await refreshStats();
   initList();
   initDetail();
   initSearch();
