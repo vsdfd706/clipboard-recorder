@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' file: data:">
+  <title>Clipboard Recorder</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Toolbar -->
+    <header id="toolbar">
+      <div class="toolbar-left">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="search" id="search-input" placeholder="Search clipboard records..." autocomplete="off">
+          <button id="search-clear" class="btn-icon" title="Clear search">✕</button>
+        </div>
+        <div class="filter-group">
+          <select id="filter-time">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+          <select id="filter-type">
+            <option value="all">All Types</option>
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+            <option value="file">File</option>
+          </select>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <span id="monitor-badge" class="badge badge-active" title="Monitoring status">● Monitoring</span>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+      <!-- Left Panel: Record List -->
+      <aside id="left-panel">
+        <div id="record-list" class="list-container"></div>
+      </aside>
+
+      <!-- Resize Handle -->
+      <div id="panel-resizer"></div>
+
+      <!-- Right Panel: Detail / Trash / Settings -->
+      <section id="right-panel">
+        <!-- Records Detail View -->
+        <div id="view-records-detail" class="detail-view active">
+          <div id="detail-placeholder" class="placeholder">
+            <div class="placeholder-icon">📋</div>
+            <p>Select a record to view details</p>
+          </div>
+          <div id="detail-content" class="detail-content" style="display:none">
+            <div class="detail-header">
+              <span id="detail-type-badge" class="type-badge"></span>
+              <span id="detail-time"></span>
+            </div>
+            <div class="detail-body">
+              <!-- Text content -->
+              <textarea id="detail-text-editor" class="editor" placeholder="No text content"></textarea>
+              <!-- Image preview -->
+              <div id="detail-image-preview" class="image-preview" style="display:none">
+                <img id="detail-image" src="" alt="Preview">
+              </div>
+              <!-- File info -->
+              <div id="detail-file-info" class="file-info" style="display:none">
+                <span id="detail-file-name"></span>
+              </div>
+              <!-- Note field (for image/file types) -->
+              <div id="detail-note-group" style="display:none">
+                <label>Note:</label>
+                <textarea id="detail-note-editor" class="editor note-editor" placeholder="Add a note..."></textarea>
+              </div>
+            </div>
+            <div class="detail-actions">
+              <span id="detail-save-status" class="save-status"></span>
+              <button id="btn-copy-to-clipboard" class="btn">📋 Copy to Clipboard</button>
+              <button id="btn-delete-record" class="btn btn-danger">🗑 Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trash View -->
+        <div id="view-trash" class="detail-view">
+          <div class="view-header">
+            <h2>Trash</h2>
+            <button id="btn-empty-trash" class="btn btn-danger btn-sm">Empty Trash</button>
+          </div>
+          <div id="trash-list" class="list-container"></div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="view-settings" class="detail-view">
+          <div class="view-header">
+            <h2>Settings</h2>
+          </div>
+          <div class="settings-form">
+            <label class="setting-row">
+              <span>Launch on startup</span>
+              <input type="checkbox" id="setting-launch-startup">
+            </label>
+            <label class="setting-row">
+              <span>Minimize to tray on close</span>
+              <input type="checkbox" id="setting-minimize-tray" checked>
+            </label>
+            <label class="setting-row">
+              <span>Clipboard monitoring</span>
+              <input type="checkbox" id="setting-monitor-enabled" checked>
+            </label>
+            <label class="setting-row">
+              <span>Notify on new record</span>
+              <input type="checkbox" id="setting-notify">
+            </label>
+            <label class="setting-row">
+              <span>Max records (0 = unlimited)</span>
+              <input type="number" id="setting-max-records" value="0" min="0" step="100">
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Tab Bar -->
+    <footer id="tab-bar">
+      <button class="tab active" data-tab="records">
+        📋 Records <span id="badge-records" class="count-badge">0</span>
+      </button>
+      <button class="tab" data-tab="trash">
+        🗑 Trash <span id="badge-trash" class="count-badge">0</span>
+      </button>
+      <button class="tab" data-tab="settings">
+        ⚙️ Settings
+      </button>
+    </footer>
+  </div>
+
+  <!-- Scripts (ES modules, order matters for initialization) -->
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>
