@@ -1,0 +1,14 @@
+appId: com.clipboard-recorder.app
+productName: Clipboard Recorder
+directories:
+  output: dist
+files:
+  - src/**/*
+  - assets/**/*
+  - package.json
+win:
+  target: nsis
+  icon: assets/icon.png
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
