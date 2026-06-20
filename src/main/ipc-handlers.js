@@ -86,6 +86,8 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
     settings[key] = value;
     // Persist settings to disk
     // _dataDir is set by main/index.js during settings initialization
+    // Note: settings persistence lives here since settings lives in main process scope.
+    // The saveSettings() in index.js is used for initial file creation only.
     const settingsPath = path.join(settings._dataDir, 'settings.json');
     const toSave = { ...settings };
     delete toSave._dataDir;

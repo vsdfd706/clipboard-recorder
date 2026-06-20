@@ -16,8 +16,9 @@ export function initKeys() {
       }
     }
 
-    // Ctrl+Shift+Delete: permanent delete (only in trash view)
+    // Ctrl+Shift+Delete: empty trash with confirmation (only in trash view)
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Delete') {
+      if (isEditingInput(e.target)) return;
       e.preventDefault();
       if (state.activeTab === 'trash') {
         // In trash tab, permanently delete the most recently focused trash item
