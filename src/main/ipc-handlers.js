@@ -1,5 +1,7 @@
-const { ipcMain, clipboard } = require('electron');
+const { ipcMain, clipboard, nativeImage } = require('electron');
 const dbModule = require('./database');
+const fs = require('fs');
+const path = require('path');
 
 function registerIpcHandlers({ db, monitor, settings, getWin }) {
   // ── Records ──
@@ -18,8 +20,12 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
   });
 
   ipcMain.handle('records:delete', (_event, id) => {
-    dbModule.moveToTrash(db, id);
-    return { ok: true };
+    try {
+      dbModule.moveToTrash(db, id);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: error.message };
+    }
   });
 
   ipcMain.handle('records:copy-to-clipboard', (_event, id) => {
@@ -29,9 +35,10 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
     if (record.type === 'text') {
       clipboard.writeText(record.content);
     } else if (record.type === 'image' && record.file_path) {
-      const { nativeImage } = require('electron');
       const img = nativeImage.createFromPath(record.file_path);
       clipboard.writeImage(img);
+    } else if (record.type === 'file') {
+      return { ok: false, error: 'File type not yet supported for clipboard copy' };
     }
     return { ok: true };
   });
@@ -43,18 +50,30 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
   });
 
   ipcMain.handle('trash:restore', (_event, id) => {
-    dbModule.restoreFromTrash(db, id);
-    return { ok: true };
+    try {
+      dbModule.restoreFromTrash(db, id);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: error.message };
+    }
   });
 
   ipcMain.handle('trash:delete-permanent', (_event, id) => {
-    const result = dbModule.permanentDelete(db, id);
-    return { ok: true, ...result };
+    try {
+      const result = dbModule.permanentDelete(db, id);
+      return { ok: true, ...result };
+    } catch (error) {
+      return { ok: false, error: error.message };
+    }
   });
 
   ipcMain.handle('trash:empty', () => {
-    const result = dbModule.emptyTrash(db);
-    return { ok: true, ...result };
+    try {
+      const result = dbModule.emptyTrash(db);
+      return { ok: true, ...result };
+    } catch (error) {
+      return { ok: false, error: error.message };
+    }
   });
 
   // ── Settings ──
@@ -66,8 +85,7 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
   ipcMain.handle('settings:set', (_event, key, value) => {
     settings[key] = value;
     // Persist settings to disk
-    const fs = require('fs');
-    const path = require('path');
+    // _dataDir is set by main/index.js during settings initialization
     const settingsPath = path.join(settings._dataDir, 'settings.json');
     const toSave = { ...settings };
     delete toSave._dataDir;
@@ -84,7 +102,10 @@ function registerIpcHandlers({ db, monitor, settings, getWin }) {
       monitor.start();
     }
     const status = monitor.isRunning();
-    getWin().webContents.send('monitor:status-changed', status);
+    const win = getWin();
+    if (win) {
+      win.webContents.send('monitor:status-changed', status);
+    }
     return status;
   });
 
