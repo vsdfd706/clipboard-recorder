@@ -36,12 +36,10 @@ export function initKeys() {
       document.querySelector('.tab[data-tab="records"]').click();
     }
 
-    // Ctrl+H: toggle window visibility
+    // Ctrl+H: hide window to tray
     if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
       e.preventDefault();
-      // Send to main process — we'll add a simple IPC for this
-      // For now, minimize the window via Electron's API
-      window.postMessage({ type: 'minimize-window' }, '*');
+      window.clipboardAPI.hideWindow();
     }
   });
 }

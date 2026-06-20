@@ -25,6 +25,9 @@ contextBridge.exposeInMainWorld('clipboardAPI', {
   // Stats
   getStats: () => ipcRenderer.invoke('stats:get'),
 
+  // Window control
+  hideWindow: () => ipcRenderer.invoke('window:hide'),
+
   // Events (main → renderer)
   onNewRecord: (callback) => {
     const listener = (_event, record) => callback(record);
