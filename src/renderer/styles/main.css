@@ -97,8 +97,8 @@ body {
   white-space: nowrap;
 }
 
-.badge-active { background: #0a3a1a; color: var(--success); }
-.badge-paused { background: #3a2a0a; color: #f0c040; }
+.badge-active { background: var(--bg-active, #0a3a1a); color: var(--success); }
+.badge-paused { background: var(--bg-paused, #3a2a0a); color: var(--warning, #f0c040); }
 
 .btn-icon {
   background: none;
