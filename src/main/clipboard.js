@@ -21,7 +21,6 @@ class ClipboardMonitor {
     this._timer = null;
     this._lastHash = null;
     this._interval = 200; // ms between polls
-    this._maxRecords = 1000; // default, can be changed via setMaxRecords
   }
 
   /**
@@ -50,22 +49,6 @@ class ClipboardMonitor {
    */
   isRunning() {
     return this._running;
-  }
-
-  /**
-   * Update the polling interval (in ms).
-   * @param {number} ms
-   */
-  setInterval(ms) {
-    this._interval = ms;
-  }
-
-  /**
-   * Update the maximum number of records allowed.
-   * @param {number} max
-   */
-  setMaxRecords(max) {
-    this._maxRecords = max;
   }
 
   // ---- internal ----
@@ -147,26 +130,11 @@ class ClipboardMonitor {
   }
 
   /**
-   * Determine the active window's application name.
-   * On Windows this reads from `process.stdin` or other OS-level info.
-   * Electron does not expose a direct API for the foreground window title,
-   * so this returns null unless a platform-specific approach is implemented.
-   * @returns {string|null}
-   */
-  _getSourceApp() {
-    // Electron does not provide a cross-platform API for the foreground
-    // window's executable name.  This is a best-effort stub that
-    // downstream integration can replace if needed.
-    return null;
-  }
-
-  /**
-   * Build the record object, save images/files to disk, enforce maxRecords,
+   * Build the record object, save images/files to disk,
    * and invoke the onNewRecord callback.
    */
   _emitRecord({ type, content, imageBuffer, filePath, fileName, files }) {
     const id = crypto.randomUUID();
-    const sourceApp = this._getSourceApp();
     let persistedFilePath = null;
     let persistedFileName = null;
 
@@ -182,9 +150,9 @@ class ClipboardMonitor {
 
     if (type === 'file' && filePath && fileName) {
       persistedFileName = fileName;
-      // For files, we reference the original path rather than copying.
-      // The file_path column stores where the original file lives.
       persistedFilePath = filePath;
+      // For file records, store the joined file paths as content
+      content = files ? files.join('\n') : filePath;
     }
 
     const record = {
@@ -193,24 +161,9 @@ class ClipboardMonitor {
       content: content || null,
       filePath: persistedFilePath,
       fileName: persistedFileName,
-      sourceApp,
     };
 
-    // Enforce max records limit before notifying
-    this._enforceMaxRecords();
-
     this.onNewRecord(record);
-  }
-
-  /**
-   * If the record count exceeds _maxRecords, delete the oldest extras.
-   */
-  _enforceMaxRecords() {
-    const { getRecordCount, deleteOldestRecords } = require('./database');
-    const count = getRecordCount(this.db);
-    if (count > this._maxRecords) {
-      deleteOldestRecords(this.db, count - this._maxRecords);
-    }
   }
 }
 
