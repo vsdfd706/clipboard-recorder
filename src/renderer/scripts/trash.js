@@ -21,8 +21,12 @@ async function renderTrash() {
   const trashItems = await window.clipboardAPI.getTrashRecords();
   const container = document.getElementById('trash-list');
 
+  // Remove previous event listener to prevent leaks on re-render
+  container.replaceWith(container.cloneNode(true));
+  const freshContainer = document.getElementById('trash-list');
+
   if (trashItems.length === 0) {
-    container.innerHTML = `
+    freshContainer.innerHTML = `
       <div style="padding:24px;text-align:center;color:var(--text-muted)">
         <p>Trash is empty</p>
       </div>
@@ -30,7 +34,7 @@ async function renderTrash() {
     return;
   }
 
-  container.innerHTML = trashItems.map(item => {
+  freshContainer.innerHTML = trashItems.map(item => {
     const preview = getTrashPreview(item);
     const deletedDate = new Date(item.deleted_at).toLocaleString();
     const originalDate = new Date(item.original_created_at).toLocaleString();
@@ -54,7 +58,7 @@ async function renderTrash() {
   }).join('');
 
   // Event delegation for restore/permanent-delete buttons
-  container.addEventListener('click', async (e) => {
+  freshContainer.addEventListener('click', async (e) => {
     const restoreBtn = e.target.closest('.btn-restore');
     const deleteBtn = e.target.closest('.btn-delete-forever');
 

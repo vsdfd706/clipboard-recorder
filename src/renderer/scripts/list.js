@@ -116,7 +116,15 @@ function showContextMenu(x, y) {
     menu.remove();
     document.removeEventListener('click', closeHandler);
   };
-  setTimeout(() => document.addEventListener('click', closeHandler), 0);
+  setTimeout(() => document.addEventListener('click', closeHandler, { once: true }), 0);
+  // Also close on Escape key
+  const escapeHandler = (ev) => {
+    if (ev.key === 'Escape') {
+      menu.remove();
+      document.removeEventListener('keydown', escapeHandler);
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
 }
 
 function updateSelection() {

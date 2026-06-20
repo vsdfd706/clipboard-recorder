@@ -19,7 +19,15 @@ export function initKeys() {
     // Ctrl+Shift+Delete: permanent delete (only in trash view)
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Delete') {
       e.preventDefault();
-      // This is handled by the trash view directly
+      if (state.activeTab === 'trash') {
+        // In trash tab, permanently delete the most recently focused trash item
+        // (the trash view's button click handler manages the confirm dialog)
+        const confirmed = confirm('Permanently delete all selected items? This cannot be undone.');
+        if (!confirmed) return;
+        window.clipboardAPI.emptyTrash().then(() => {
+          document.querySelector('.tab[data-tab="trash"]').click();
+        });
+      }
     }
 
     // Ctrl+N: switch to records tab
