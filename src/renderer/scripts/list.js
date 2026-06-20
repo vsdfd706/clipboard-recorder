@@ -59,8 +59,8 @@ function showContextMenu(x, y) {
   menu.className = 'context-menu';
   menu.style.cssText = `position:fixed;left:${x}px;top:${y}px;z-index:1000;`;
   menu.innerHTML = `
-    <div class="context-menu-item" data-action="copy">📋 Copy Content</div>
-    <div class="context-menu-item" data-action="delete">🗑 Delete</div>
+    <div class="context-menu-item" data-action="copy">📋 复制内容</div>
+    <div class="context-menu-item" data-action="delete">🗑 删除</div>
   `;
 
   // Add styles dynamically if not present
@@ -181,7 +181,7 @@ async function renderList() {
   if (records.length === 0) {
     listEl.innerHTML = `
       <div style="padding:24px;text-align:center;color:var(--text-muted)">
-        <p>No records found</p>
+        <p>暂无记录</p>
       </div>
     `;
   }

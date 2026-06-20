@@ -12,7 +12,7 @@ export function initDetail() {
   // Auto-save on input (debounced 1 second)
   const onInput = () => {
     const saveStatus = document.getElementById('detail-save-status');
-    saveStatus.textContent = 'Unsaved changes...';
+    saveStatus.textContent = '未保存...';
     saveStatus.style.color = '#f0c040';
 
     clearTimeout(autoSaveTimer);
@@ -47,7 +47,7 @@ export function initDetail() {
     if (!currentRecord) return;
     await window.clipboardAPI.copyToClipboard(currentRecord.id);
     const saveStatus = document.getElementById('detail-save-status');
-    saveStatus.textContent = 'Copied!';
+    saveStatus.textContent = '已复制！';
     saveStatus.style.color = 'var(--success)';
     setTimeout(() => { saveStatus.textContent = ''; }, 1500);
   });
@@ -123,7 +123,7 @@ async function saveCurrent() {
   await window.clipboardAPI.updateRecord(currentRecord.id, data);
 
   const saveStatus = document.getElementById('detail-save-status');
-  saveStatus.textContent = '✓ Saved';
+  saveStatus.textContent = '✓ 已保存';
   saveStatus.style.color = 'var(--success)';
   setTimeout(() => { saveStatus.textContent = ''; }, 2000);
 

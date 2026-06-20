@@ -50,7 +50,7 @@ function createWindow() {
     height: 600,
     minWidth: 600,
     minHeight: 400,
-    title: 'Clipboard Recorder',
+    title: '剪贴板记录器',
     webPreferences: {
       preload: path.join(__dirname, '..', 'preload', 'index.js'),
       contextIsolation: true,

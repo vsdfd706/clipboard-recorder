@@ -1,60 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' file: data:">
-  <title>Clipboard Recorder</title>
+  <title>剪贴板记录器</title>
   <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
   <div id="app">
-    <!-- Toolbar -->
+    <!-- 顶部工具栏 -->
     <header id="toolbar">
       <div class="toolbar-left">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="search" id="search-input" placeholder="Search clipboard records..." autocomplete="off">
-          <button id="search-clear" class="btn-icon" title="Clear search">✕</button>
+          <input type="search" id="search-input" placeholder="搜索剪贴板记录..." autocomplete="off">
+          <button id="search-clear" class="btn-icon" title="清除搜索">✕</button>
         </div>
         <div class="filter-group">
           <select id="filter-time">
-            <option value="all">All Time</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
+            <option value="all">全部时间</option>
+            <option value="today">今天</option>
+            <option value="week">本周</option>
+            <option value="month">本月</option>
           </select>
           <select id="filter-type">
-            <option value="all">All Types</option>
-            <option value="text">Text</option>
-            <option value="image">Image</option>
-            <option value="file">File</option>
+            <option value="all">全部类型</option>
+            <option value="text">文本</option>
+            <option value="image">图片</option>
+            <option value="file">文件</option>
           </select>
         </div>
       </div>
       <div class="toolbar-right">
-        <span id="monitor-badge" class="badge badge-active" title="Monitoring status">● Monitoring</span>
+        <span id="monitor-badge" class="badge badge-active" title="监控状态">● 监控中</span>
       </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- 主内容区域 -->
     <main id="main-content">
-      <!-- Left Panel: Record List -->
+      <!-- 左侧面板：记录列表 -->
       <aside id="left-panel">
         <div id="record-list" class="list-container"></div>
       </aside>
 
-      <!-- Resize Handle -->
+      <!-- 分隔线（可拖拽） -->
       <div id="panel-resizer"></div>
 
-      <!-- Right Panel: Detail / Trash / Settings -->
+      <!-- 右侧面板：详情 / 回收站 / 设置 -->
       <section id="right-panel">
-        <!-- Records Detail View -->
+        <!-- 记录详情视图 -->
         <div id="view-records-detail" class="detail-view active">
           <div id="detail-placeholder" class="placeholder">
             <div class="placeholder-icon">📋</div>
-            <p>Select a record to view details</p>
+            <p>选择一条记录以查看详情</p>
           </div>
           <div id="detail-content" class="detail-content" style="display:none">
             <div class="detail-header">
@@ -62,63 +62,63 @@
               <span id="detail-time"></span>
             </div>
             <div class="detail-body">
-              <!-- Text content -->
-              <textarea id="detail-text-editor" class="editor" placeholder="No text content"></textarea>
-              <!-- Image preview -->
+              <!-- 文本内容 -->
+              <textarea id="detail-text-editor" class="editor" placeholder="暂无文本内容"></textarea>
+              <!-- 图片预览 -->
               <div id="detail-image-preview" class="image-preview" style="display:none">
-                <img id="detail-image" src="" alt="Preview">
+                <img id="detail-image" src="" alt="预览">
               </div>
-              <!-- File info -->
+              <!-- 文件信息 -->
               <div id="detail-file-info" class="file-info" style="display:none">
                 <span id="detail-file-name"></span>
               </div>
-              <!-- Note field (for image/file types) -->
+              <!-- 备注（图片/文件类型） -->
               <div id="detail-note-group" style="display:none">
-                <label>Note:</label>
-                <textarea id="detail-note-editor" class="editor note-editor" placeholder="Add a note..."></textarea>
+                <label>备注：</label>
+                <textarea id="detail-note-editor" class="editor note-editor" placeholder="添加备注..."></textarea>
               </div>
             </div>
             <div class="detail-actions">
               <span id="detail-save-status" class="save-status"></span>
-              <button id="btn-copy-to-clipboard" class="btn">📋 Copy to Clipboard</button>
-              <button id="btn-delete-record" class="btn btn-danger">🗑 Delete</button>
+              <button id="btn-copy-to-clipboard" class="btn">📋 复制到剪贴板</button>
+              <button id="btn-delete-record" class="btn btn-danger">🗑 删除</button>
             </div>
           </div>
         </div>
 
-        <!-- Trash View -->
+        <!-- 回收站视图 -->
         <div id="view-trash" class="detail-view">
           <div class="view-header">
-            <h2>Trash</h2>
-            <button id="btn-empty-trash" class="btn btn-danger btn-sm">Empty Trash</button>
+            <h2>回收站</h2>
+            <button id="btn-empty-trash" class="btn btn-danger btn-sm">清空回收站</button>
           </div>
           <div id="trash-list" class="list-container"></div>
         </div>
 
-        <!-- Settings View -->
+        <!-- 设置视图 -->
         <div id="view-settings" class="detail-view">
           <div class="view-header">
-            <h2>Settings</h2>
+            <h2>设置</h2>
           </div>
           <div class="settings-form">
             <label class="setting-row">
-              <span>Launch on startup</span>
+              <span>开机自启</span>
               <input type="checkbox" id="setting-launch-startup">
             </label>
             <label class="setting-row">
-              <span>Minimize to tray on close</span>
+              <span>关闭窗口时最小化到托盘</span>
               <input type="checkbox" id="setting-minimize-tray" checked>
             </label>
             <label class="setting-row">
-              <span>Clipboard monitoring</span>
+              <span>剪贴板监控</span>
               <input type="checkbox" id="setting-monitor-enabled" checked>
             </label>
             <label class="setting-row">
-              <span>Notify on new record</span>
+              <span>新记录通知</span>
               <input type="checkbox" id="setting-notify">
             </label>
             <label class="setting-row">
-              <span>Max records (0 = unlimited)</span>
+              <span>最大记录数（0 = 无限制）</span>
               <input type="number" id="setting-max-records" value="0" min="0" step="100">
             </label>
           </div>
@@ -126,21 +126,20 @@
       </section>
     </main>
 
-    <!-- Tab Bar -->
+    <!-- 底部标签栏 -->
     <footer id="tab-bar">
       <button class="tab active" data-tab="records">
-        📋 Records <span id="badge-records" class="count-badge">0</span>
+        📋 剪贴板 <span id="badge-records" class="count-badge">0</span>
       </button>
       <button class="tab" data-tab="trash">
-        🗑 Trash <span id="badge-trash" class="count-badge">0</span>
+        🗑 回收站 <span id="badge-trash" class="count-badge">0</span>
       </button>
       <button class="tab" data-tab="settings">
-        ⚙️ Settings
+        ⚙️ 设置
       </button>
     </footer>
   </div>
 
-  <!-- Scripts (ES modules, order matters for initialization) -->
   <script type="module" src="scripts/app.js"></script>
 </body>
 </html>

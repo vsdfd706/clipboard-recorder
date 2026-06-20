@@ -12,7 +12,7 @@ function createTray({ monitor, getWin, getIconPath }) {
     const isMonitoring = monitor.isRunning();
     return Menu.buildFromTemplate([
       {
-        label: isMonitoring ? 'Pause Monitoring' : 'Resume Monitoring',
+        label: isMonitoring ? '暂停监控' : '恢复监控',
         click: () => {
           if (monitor.isRunning()) {
             monitor.stop();
@@ -27,7 +27,7 @@ function createTray({ monitor, getWin, getIconPath }) {
         },
       },
       {
-        label: 'Show/Hide Window',
+        label: '显示/隐藏窗口',
         click: () => {
           const win = getWin();
           if (!win) return;
@@ -41,7 +41,7 @@ function createTray({ monitor, getWin, getIconPath }) {
       },
       { type: 'separator' },
       {
-        label: 'Quit',
+        label: '退出',
         click: () => {
           const app = require('electron').app;
           app.isQuitting = true;
@@ -51,7 +51,7 @@ function createTray({ monitor, getWin, getIconPath }) {
     ]);
   };
 
-  tray.setToolTip('Clipboard Recorder');
+  tray.setToolTip('剪贴板记录器');
   tray.setContextMenu(buildMenu());
 
   tray.on('right-click', () => {

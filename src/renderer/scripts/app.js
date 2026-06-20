@@ -51,7 +51,7 @@ async function refreshStats() {
 function updateMonitorBadge(isRunning) {
   state.monitorRunning = isRunning;
   const badge = document.getElementById('monitor-badge');
-  badge.textContent = isRunning ? '● Monitoring' : '○ Paused';
+  badge.textContent = isRunning ? '● 监控中' : '○ 已暂停';
   badge.className = `badge ${isRunning ? 'badge-active' : 'badge-paused'}`;
 }
 

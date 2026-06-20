@@ -23,7 +23,7 @@ export function initKeys() {
       if (state.activeTab === 'trash') {
         // In trash tab, permanently delete the most recently focused trash item
         // (the trash view's button click handler manages the confirm dialog)
-        const confirmed = confirm('Permanently delete all selected items? This cannot be undone.');
+        const confirmed = confirm('确定要永久删除回收站中的所有内容吗？此操作不可撤销。');
         if (!confirmed) return;
         window.clipboardAPI.emptyTrash().then(() => {
           document.querySelector('.tab[data-tab="trash"]').click();

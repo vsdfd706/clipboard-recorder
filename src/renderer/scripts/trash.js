@@ -3,7 +3,7 @@
 export function initTrash() {
   // Empty trash button
   document.getElementById('btn-empty-trash').addEventListener('click', async () => {
-    const confirmed = confirm('Permanently delete all items in trash? This cannot be undone.');
+    const confirmed = confirm('确定要清空回收站吗？此操作不可撤销。');
     if (!confirmed) return;
 
     await window.clipboardAPI.emptyTrash();
@@ -28,7 +28,7 @@ async function renderTrash() {
   if (trashItems.length === 0) {
     freshContainer.innerHTML = `
       <div style="padding:24px;text-align:center;color:var(--text-muted)">
-        <p>Trash is empty</p>
+        <p>回收站为空</p>
       </div>
     `;
     return;
@@ -72,7 +72,7 @@ async function renderTrash() {
 
     if (deleteBtn) {
       const id = deleteBtn.dataset.id;
-      const confirmed = confirm('Permanently delete this item? This cannot be undone.');
+      const confirmed = confirm('确定要永久删除这条记录吗？此操作不可撤销。');
       if (!confirmed) return;
       await window.clipboardAPI.permanentDelete(id);
       await renderTrash();
